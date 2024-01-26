@@ -1,13 +1,15 @@
 
-push = require 'lib.push'
+push = require 'lib/push'
 
-Class = require 'lib.class'
+Class = require 'lib/class'
 
-Timer = require 'lib.knife.timer'
+Timer = require 'lib/knife.timer'
 
 require 'src/CONSTANTS'
 require 'src/Utilities'
 require 'src/StateMachine'
+require 'src/Board'
+require 'src/Tile'
 
 
 require 'src/states/BaseState'

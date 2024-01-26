@@ -1,5 +1,3 @@
-
-
 function GenerateTileQuads(atlas)
     local tiles = {}
 
@@ -26,4 +24,17 @@ function GenerateTileQuads(atlas)
     end
 
     return tiles
+end
+
+
+function drawGraphicWithShadow(atlas,quad,x,y,shadowThickness)
+    love.graphics.setColor(0,0,0,1)
+    love.graphics.draw(atlas,quad,x+shadowThickness,y+shadowThickness)
+    love.graphics.setColor(1,1,1,1)
+    love.graphics.draw(atlas,quad,x,y) 
+end
+
+function drawFilter(r,g,b,a)
+    love.graphics.setColor(r,g,b,a)
+    love.graphics.rectangle('fill',0,0,VIRTUAL_WIDTH,VIRTUAL_HEIGHT)
 end
