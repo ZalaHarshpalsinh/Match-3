@@ -34,7 +34,17 @@ function drawGraphicWithShadow(atlas,quad,x,y,shadowThickness)
     love.graphics.draw(atlas,quad,x,y) 
 end
 
-function drawFilter(r,g,b,a)
-    love.graphics.setColor(r,g,b,a)
-    love.graphics.rectangle('fill',0,0,VIRTUAL_WIDTH,VIRTUAL_HEIGHT)
+function drawRectangle(color,x,y,width,height,curve)
+    love.graphics.setColor(color)
+    love.graphics.rectangle('fill',x,y,width,height,curve)
+    love.graphics.setColor(1,1,1,1)
+end
+
+function printShadow(text,x,y)
+    love.graphics.setColor(0,0,0,1)
+    love.graphics.print(text, x,y+2)
+    love.graphics.print(text, x+1,y+2)
+    love.graphics.print(text, x+2,y+2)
+    -- love.graphics.print(text, x+1,y+2)
+    
 end
