@@ -38,10 +38,12 @@ function PlayState:update(dt)
             local tile1 = self.board.tiles[self.selectedTile.gridY][self.selectedTile.gridX]
             local tile2 = self.board.tiles[clickGridY][clickGridX]
 
-            Timer.tween(5,{
+            Timer.tween(0.5,{
                 [tile1] = {x=tile2.x, y=tile2.y, gridX=tile2.gridX, gridY=tile2.gridY},
                 [tile2] = {x=tile1.x, y=tile1.y, gridX=tile1.gridX, gridY=tile1.gridY},
-            })
+            }):finish(function()
+                self:handleMatches()
+            end)
 
             self.board.tiles[self.selectedTile.gridY][self.selectedTile.gridX] = tile2
             self.board.tiles[clickGridY][clickGridX] = tile1
@@ -58,6 +60,20 @@ function PlayState:update(dt)
     end
 
     Timer.update(dt)
+end
+
+function PlayState:handleMatches()
+    local matches = self.board:calculateMatches()
+
+    if matches then
+        self.board:removeMatches()
+
+        local newTilesTweens = self.board:getNewTiles()
+
+        Timer.tween(0.5,newTilesTweens):finish(function()
+            self:handleMatches()
+        end)
+    end
 end
 
 function PlayState:render()
