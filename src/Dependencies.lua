@@ -11,6 +11,8 @@ require 'src/StateMachine'
 
 
 require 'src/states/BaseState'
+require 'src/states/StartState'
+
 
 gSounds = {
     ['music'] = love.audio.newSource('sounds/music3.mp3', 'static'),
@@ -35,6 +37,11 @@ gFonts = {
     ['small'] = love.graphics.newFont('fonts/font.ttf', 8),
     ['medium'] = love.graphics.newFont('fonts/font.ttf', 16),
     ['large'] = love.graphics.newFont('fonts/font.ttf', 32)
+}
+
+gStateMachine = StateMachine{
+    ['BaseState'] = function() return BaseState() end,
+    ['StartState'] = function() return StartState() end,
 }
 
 

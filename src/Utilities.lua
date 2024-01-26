@@ -16,13 +16,13 @@ function GenerateTileQuads(atlas)
                     cursor.y,
                     TILE_WIDTH,
                     TILE_HEIGHT,
-                    atlas:getDimentions()
+                    atlas:getDimensions()
                 ))
-                cursor.x += TILE_WIDTH
+                cursor.x = cursor.x + TILE_WIDTH
             end
         end
         cursor.x=0
-        cursor.y+=2*TILE_HEIGHT
+        cursor.y = cursor.y + 2*TILE_HEIGHT
     end
 
     return tiles
