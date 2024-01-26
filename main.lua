@@ -36,9 +36,9 @@ function love.update(dt)
     end
     backgroundScroll = (backgroundScroll + (BACKGROUND_SCROLL_SPEED * dt)) % BACKGROUND_LOOPING_POINT
 
-    gKeyPressed = {}
-
     gStateMachine:update(dt)
+    
+    gKeyPressed = {}
 end
 
 function love.draw()

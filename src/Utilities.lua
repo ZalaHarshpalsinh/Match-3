@@ -40,11 +40,15 @@ function drawRectangle(color,x,y,width,height,curve)
     love.graphics.setColor(1,1,1,1)
 end
 
-function printShadow(text,x,y)
-    love.graphics.setColor(0,0,0,1)
-    love.graphics.print(text, x,y+2)
-    love.graphics.print(text, x+1,y+2)
-    love.graphics.print(text, x+2,y+2)
-    -- love.graphics.print(text, x+1,y+2)
+function printTextShadow(text,x,y,width, alignment)
+    width = width or VIRTUAL_WIDTH
+    alignment = alignment or 'left'
     
+    love.graphics.setColor(0,0,0,1)
+    love.graphics.printf(text, x+1, y, width, alignment)
+    love.graphics.printf(text, x+2, y, width, alignment)
+    love.graphics.printf(text, x, y+2, width, alignment)
+    love.graphics.printf(text, x+1, y+2, width, alignment)
+    love.graphics.printf(text, x+2, y+2, width, alignment)
+    love.graphics.setColor(1,1,1,1)
 end
