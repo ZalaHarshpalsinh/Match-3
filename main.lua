@@ -19,6 +19,10 @@ function love.load()
     gStateMachine:change('StartState')
 
     gKeyPressed = {}
+    gMouse = {
+        clicked = false,
+        coords = {}
+    }
 end
 
 function love.resize(w,h)
@@ -27,6 +31,12 @@ end
 
 function love.keypressed(key)
     gKeyPressed[key] = true
+end
+
+function love.mousepressed(x, y, button, istouch, presses)
+    x,y = push:toGame(x,y)
+    gMouse.clicked = true
+    gMouse.coords = {x = x, y = y}
 end
 
 function love.update(dt)
@@ -39,6 +49,7 @@ function love.update(dt)
     gStateMachine:update(dt)
     
     gKeyPressed = {}
+    gMouse.clicked = false
 end
 
 function love.draw()

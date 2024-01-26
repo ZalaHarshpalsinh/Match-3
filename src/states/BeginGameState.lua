@@ -1,6 +1,7 @@
 BeginGameState = Class{__includes = BaseState}
 
 function BeginGameState:init()
+
     self.transitionAlpha = 1
     self.boardX = VIRTUAL_WIDTH/2 - 20
     self.boardY =  (VIRTUAL_HEIGHT - 8*TILE_HEIGHT)/2
@@ -15,7 +16,9 @@ function BeginGameState:init()
 end
 
 function BeginGameState:enter(enterParas)
+    self.targetScore = enterParas.targetScore
     self.levelLabel.level = enterParas.level
+    
     self.board = Board(self.boardX,self.boardY,self.levelLabel.level)
 
     Timer.tween(1,{
@@ -30,6 +33,7 @@ function BeginGameState:enter(enterParas)
                 }):finish(function()
                     gStateMachine:change('PlayState',{
                         level = self.levelLabel.level,
+                        targetScore = self.targetScore,
                         board = self.board
                     })
                 end)
