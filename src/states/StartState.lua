@@ -45,6 +45,7 @@ function StartState:init()
 
     self.menu.box.paddingY = (self.menu.box.height - ((2*#self.menu.items-1) * gFonts['medium']:getHeight()))/2
 
+    self.transitionAlpha = 0
 end
 
 function StartState:update(dt)
@@ -53,6 +54,19 @@ function StartState:update(dt)
         self.menu.selectedItem = self.menu.selectedItem == 1 and #self.menu.items or self.menu.selectedItem-1
     elseif(gKeyPressed['down']) then
         self.menu.selectedItem = self.menu.selectedItem == #self.menu.items and 1 or self.menu.selectedItem+1
+    elseif(gKeyPressed['enter'] or gKeyPressed['return']) then
+        if(self.menu.selectedItem == 1) then
+            Timer.tween(1,{
+                [self] = {transitionAlpha = 1}
+            }):finish(function()
+                gStateMachine:change('BeginGameState',{
+                    level = 1
+                })
+                self.colorTimer:remove()
+            end)
+        elseif(self.menu.selectedItem == 2) then
+            love.event.quit()
+        end
     end
     Timer.update(dt)
 end
@@ -65,6 +79,7 @@ function StartState:render()
     self:drawLogo()
     self:drawMenu()
 
+    drawRectangle({1,1,1,self.transitionAlpha},0,0,VIRTUAL_WIDTH,VIRTUAL_HEIGHT,0)
 end
 
 

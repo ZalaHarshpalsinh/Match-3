@@ -14,6 +14,7 @@ require 'src/Tile'
 
 require 'src/states/BaseState'
 require 'src/states/StartState'
+require 'src/states/BeginGameState'
 
 
 gSounds = {
@@ -44,6 +45,7 @@ gFonts = {
 gStateMachine = StateMachine{
     ['BaseState'] = function() return BaseState() end,
     ['StartState'] = function() return StartState() end,
+    ['BeginGameState'] = function() return BeginGameState() end,
 }
 
 
