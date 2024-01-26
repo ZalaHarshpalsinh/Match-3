@@ -4,7 +4,7 @@ PlayState = Class{__includes = BaseState}
 function PlayState:init()
     self.panel = {
         score = 0,
-        timeleft = 50,
+        timeleft = 60,
         box = {
             x = 20,
             y = 20,
@@ -17,6 +17,10 @@ function PlayState:init()
 
     self.isSelected = false
     self.selectedTile = {gridX=0, gridY=0, opacity = 1}
+
+    Timer.every(1,function()
+        self.panel.timeleft = self.panel.timeleft - 1
+    end)
 end
 
 function PlayState:enter(enterParas)
@@ -27,6 +31,17 @@ function PlayState:enter(enterParas)
 end
 
 function PlayState:update(dt)
+
+    if self.panel.timeleft <=0 then
+        Timer.clear()
+        gStateMachine:change('StartState')
+    elseif self.panel.score >= self.panel.targetScore then
+        Timer.clear()
+        gStateMachine:change('BeginGameState',{
+            level = self.panel.level + 1,
+            targetScore = self.panel.targetScore + 100
+        })
+    end
 
     if gMouse.clicked and self:isValidClick() then
         local clickGridX = math.ceil((gMouse.coords.x - self.board.x)/TILE_WIDTH)
@@ -52,12 +67,14 @@ function PlayState:update(dt)
             self.isSelected = true
             self.selectedTile.gridX = clickGridX
             self.selectedTile.gridY = clickGridY
-            self:blickSelectedTile(0.5)
+            self:blinkSelectedTile(0.5)
             self.blinkTimer = Timer.every(0.6,function()
-                self:blickSelectedTile(0.5)
+                self:blinkSelectedTile(0.5)
             end)
         end
     end
+
+
 
     Timer.update(dt)
 end
@@ -66,6 +83,12 @@ function PlayState:handleMatches()
     local matches = self.board:calculateMatches()
 
     if matches then
+
+        for i,match in pairs(matches) do
+            for j,tile in pairs(match) do
+                self.panel.score = self.panel.score + (tile.shape*10)
+            end
+        end
         self.board:removeMatches()
 
         local newTilesTweens = self.board:getNewTiles()
@@ -123,7 +146,7 @@ function PlayState:isValidClick()
     end
 end
 
-function PlayState:blickSelectedTile(time)
+function PlayState:blinkSelectedTile(time)
     Timer.tween(time,{
         [self.selectedTile] = {opacity = 0.5}
     }):finish(function()
