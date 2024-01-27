@@ -3,7 +3,7 @@ PlayState = Class{__includes = BaseState}
 
 function PlayState:init()
     self.panel = {
-        timeleft = 15,
+        timeleft = 60,
         box = {
             x = 20,
             y = 20,
