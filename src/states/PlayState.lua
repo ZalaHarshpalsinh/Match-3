@@ -46,12 +46,16 @@ function PlayState:update(dt)
     if gMouse.clicked and self:isValidClick() then
         local clickGridX = math.ceil((gMouse.coords.x - self.board.x)/TILE_WIDTH)
         local clickGridY = math.ceil((gMouse.coords.y - self.board.y)/TILE_HEIGHT)
+
         if self.isSelected then
             self.isSelected = false
             self.blinkTimer:remove()
 
             local tile1 = self.board.tiles[self.selectedTile.gridY][self.selectedTile.gridX]
             local tile2 = self.board.tiles[clickGridY][clickGridX]
+            
+            self.board.tiles[self.selectedTile.gridY][self.selectedTile.gridX] = tile2
+            self.board.tiles[clickGridY][clickGridX] = tile1
 
             Timer.tween(0.5,{
                 [tile1] = {x=tile2.x, y=tile2.y, gridX=tile2.gridX, gridY=tile2.gridY},
@@ -60,8 +64,6 @@ function PlayState:update(dt)
                 self:handleMatches()
             end)
 
-            self.board.tiles[self.selectedTile.gridY][self.selectedTile.gridX] = tile2
-            self.board.tiles[clickGridY][clickGridX] = tile1
 
         else
             self.isSelected = true
@@ -136,7 +138,7 @@ end
 
 function PlayState:isValidClick()
     if gMouse.clicked then
-        if(gMouse.coords.x >= self.board.x)and(gMouse.coords.x <= self.board.x+8*TILE_WIDTH)and(gMouse.coords.y >= self.board.y)and(gMouse.coords.y <= self.board.y+8*TILE_HEIGHT) then
+        if(gMouse.coords.x >= self.board.x)and(gMouse.coords.x <= self.board.x+GRID_COLUMNS*TILE_WIDTH)and(gMouse.coords.y >= self.board.y)and(gMouse.coords.y <= self.board.y+GRID_ROWS*TILE_HEIGHT) then
             return true
         else
             return false

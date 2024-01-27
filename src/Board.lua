@@ -10,9 +10,9 @@ end
 function Board:fillTiles()
     self.tiles = {}
 
-    for y=1,8 do 
+    for y=1,GRID_ROWS do 
         self.tiles[y] = {}
-        for x=1,8 do 
+        for x=1,GRID_COLUMNS do 
             table.insert(self.tiles[y], Tile(
                 self.x + (x-1)*TILE_WIDTH,
                 self.y + (y-1)*TILE_HEIGHT,
@@ -31,14 +31,12 @@ end
 
 function Board:calculateMatches()
     local matches = {}
-    local rows = #self.tiles
-    local columns = #self.tiles[1]
-
-    for y=1,rows do
+   
+     for y=1,GRID_ROWS do
         
         local lastColor = self.tiles[y][1].color
         local matchLength = 1
-        for x=2,columns do
+        for x=2,GRID_COLUMNS do
 
             local tile = self.tiles[y][x]
             if lastColor == tile.color then
@@ -56,24 +54,23 @@ function Board:calculateMatches()
                 lastColor = tile.color
                 matchLength = 1
 
-                if x>=7 then break end
+                if x>=GRID_COLUMNS-1 then break end
             end
         end
 
         if matchLength>=3 then
             local match = {}
-            for i=columns,columns+1-matchLength,-1 do
+            for i=GRID_COLUMNS,GRID_COLUMNS+1-matchLength,-1 do
                 table.insert(match,self.tiles[y][i])
             end
             table.insert(matches,match)
         end
     end
 
-    for x=1,columns do
-        
+    for x=1,GRID_COLUMNS do
         local lastColor = self.tiles[1][x].color
         local matchLength = 1
-        for y=2,rows do
+        for y=2,GRID_ROWS do
 
             local tile = self.tiles[y][x]
             if lastColor == tile.color then
@@ -91,13 +88,13 @@ function Board:calculateMatches()
                 lastColor = tile.color
                 matchLength = 1
 
-                if y>=7 then break end
+                if y>=GRID_ROWS-1 then break end
             end
         end
 
         if matchLength>=3 then
             local match = {}
-            for i=rows,rows+1-matchLength,-1 do
+            for i=GRID_ROWS,GRID_ROWS+1-matchLength,-1 do
                 table.insert(match,self.tiles[i][x])
             end
             table.insert(matches,match)
@@ -121,14 +118,12 @@ end
 
 function Board:getNewTiles()
     local tweens = {}
-    local rows = #self.tiles
-    local columns = #self.tiles[1]
-
-    for x=1,columns do
+    
+    for x=1,GRID_COLUMNS do
         local space = false
         local spaceY = 0
 
-        local y=rows
+        local y=GRID_ROWS
 
         while y>=1 do
             local tile = self.tiles[y][x]
@@ -159,8 +154,8 @@ function Board:getNewTiles()
         end
     end
 
-    for y=1,rows do
-        for x=1,columns do
+    for y=1,GRID_ROWS do
+        for x=1,GRID_COLUMNS do
 
             local tile = self.tiles[y][x]
 
