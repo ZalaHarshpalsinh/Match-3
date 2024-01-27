@@ -50,6 +50,12 @@ end
 
 function StartState:update(dt)
 
+    if(gKeyPressed['up'] or gKeyPressed['down']) then
+        gSounds['select']:play()
+    elseif (gKeyPressed['enter'] or gKeyPressed['return']) then
+        gSounds['next-level']:play()
+    end
+
     if(gKeyPressed['up']) then
         self.menu.selectedItem = self.menu.selectedItem == 1 and #self.menu.items or self.menu.selectedItem-1
     elseif(gKeyPressed['down']) then

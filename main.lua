@@ -23,6 +23,9 @@ function love.load()
         clicked = false,
         coords = {}
     }
+
+    gSounds['music']:setLooping(true)
+    gSounds['music']:play()
 end
 
 function love.resize(w,h)

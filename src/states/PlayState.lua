@@ -3,7 +3,7 @@ PlayState = Class{__includes = BaseState}
 
 function PlayState:init()
     self.panel = {
-        timeleft = 2,
+        timeleft = 15,
         box = {
             x = 20,
             y = 20,
@@ -19,6 +19,10 @@ function PlayState:init()
 
     Timer.every(1,function()
         self.panel.timeleft = self.panel.timeleft - 1
+
+        if self.panel.timeleft <= 10 then
+            gSounds['clock']:play()
+        end
     end)
 end
 
@@ -36,11 +40,13 @@ function PlayState:update(dt)
 
     if self.panel.timeleft <=0 then
         Timer.clear()
+        gSounds['game-over']:play()
         gStateMachine:change('GameOverState',{
             score = self.panel.score
         })
     elseif self.panel.score >= self.panel.targetScore then
         Timer.clear()
+        gSounds['next-level']:play()
         gStateMachine:change('BeginGameState',{
             level = self.panel.level + 1,
             targetScore = self.panel.targetScore + 500,
@@ -48,36 +54,44 @@ function PlayState:update(dt)
         })
     end
 
-    if gMouse.clicked and self:isValidClick() then
-        local clickGridX = math.ceil((gMouse.coords.x - self.board.x)/TILE_WIDTH)
-        local clickGridY = math.ceil((gMouse.coords.y - self.board.y)/TILE_HEIGHT)
+    if gMouse.clicked then
 
-        if self.isSelected then
-            self.isSelected = false
-            self.blinkTimer:remove()
+        if self:isValidClick() then
 
-            local tile1 = self.board.tiles[self.selectedTile.gridY][self.selectedTile.gridX]
-            local tile2 = self.board.tiles[clickGridY][clickGridX]
-            
-            self.board.tiles[self.selectedTile.gridY][self.selectedTile.gridX] = tile2
-            self.board.tiles[clickGridY][clickGridX] = tile1
-
-            Timer.tween(0.5,{
-                [tile1] = {x=tile2.x, y=tile2.y, gridX=tile2.gridX, gridY=tile2.gridY},
-                [tile2] = {x=tile1.x, y=tile1.y, gridX=tile1.gridX, gridY=tile1.gridY},
-            }):finish(function()
-                self:handleMatches()
-            end)
-
-
-        else
-            self.isSelected = true
-            self.selectedTile.gridX = clickGridX
-            self.selectedTile.gridY = clickGridY
-            self:blinkSelectedTile(0.5)
-            self.blinkTimer = Timer.every(0.6,function()
+            gSounds['select']:play()
+            local clickGridX = math.ceil((gMouse.coords.x - self.board.x)/TILE_WIDTH)
+            local clickGridY = math.ceil((gMouse.coords.y - self.board.y)/TILE_HEIGHT)
+    
+            if self.isSelected then
+                self.isSelected = false
+                self.blinkTimer:remove()
+    
+                local tile1 = self.board.tiles[self.selectedTile.gridY][self.selectedTile.gridX]
+                local tile2 = self.board.tiles[clickGridY][clickGridX]
+                
+                self.board.tiles[self.selectedTile.gridY][self.selectedTile.gridX] = tile2
+                self.board.tiles[clickGridY][clickGridX] = tile1
+    
+                Timer.tween(0.5,{
+                    [tile1] = {x=tile2.x, y=tile2.y, gridX=tile2.gridX, gridY=tile2.gridY},
+                    [tile2] = {x=tile1.x, y=tile1.y, gridX=tile1.gridX, gridY=tile1.gridY},
+                }):finish(function()
+                    self:handleMatches()
+                end)
+    
+    
+            else
+                self.isSelected = true
+                self.selectedTile.gridX = clickGridX
+                self.selectedTile.gridY = clickGridY
                 self:blinkSelectedTile(0.5)
-            end)
+                self.blinkTimer = Timer.every(0.6,function()
+                    self:blinkSelectedTile(0.5)
+                end)
+
+            end
+        else
+            gSounds['error']:play()
         end
     end
 
@@ -91,6 +105,7 @@ function PlayState:handleMatches()
 
     if matches then
 
+        gSounds['match']:play()
         local rewards =  self.board:removeMatches()
 
         self.panel.score = self.panel.score + rewards.score
@@ -135,7 +150,12 @@ function PlayState:drawPanel()
     printTextShadow('Goal: ' .. tostring(self.panel.targetScore), self.panel.box.x, cursor, self.panel.box.width, 'center')
     love.graphics.printf('Goal: ' .. tostring(self.panel.targetScore), self.panel.box.x, cursor, self.panel.box.width, 'center')
     cursor = cursor + 30
+
     printTextShadow('Time left : ' .. tostring(self.panel.timeleft), self.panel.box.x, cursor, self.panel.box.width, 'center')
+
+    if self.panel.timeleft<=10 then
+        love.graphics.setColor(1,0,0,1)
+    end
     love.graphics.printf('Time left : ' .. tostring(self.panel.timeleft), self.panel.box.x, cursor, self.panel.box.width, 'center')
 end
 
