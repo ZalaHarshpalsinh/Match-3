@@ -32,6 +32,8 @@ end
 
 function PlayState:update(dt)
 
+    self.board:update(dt)
+
     if self.panel.timeleft <=0 then
         Timer.clear()
         gStateMachine:change('StartState')
@@ -86,12 +88,10 @@ function PlayState:handleMatches()
 
     if matches then
 
-        for i,match in pairs(matches) do
-            for j,tile in pairs(match) do
-                self.panel.score = self.panel.score + (tile.shape*10)
-            end
-        end
-        self.board:removeMatches()
+        local rewards =  self.board:removeMatches()
+
+        self.panel.score = self.panel.score + rewards.score
+        self.panel.timeleft = self.panel.timeleft + rewards.time
 
         local newTilesTweens = self.board:getNewTiles()
 

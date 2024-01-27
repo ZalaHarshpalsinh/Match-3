@@ -26,7 +26,6 @@ function GenerateTileQuads(atlas)
     return tiles
 end
 
-
 function drawGraphicWithShadow(atlas,quad,x,y,shadowThickness)
     love.graphics.setColor(0,0,0,1)
     love.graphics.draw(atlas,quad,x+shadowThickness,y+shadowThickness)

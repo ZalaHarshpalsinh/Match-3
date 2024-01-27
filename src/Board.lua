@@ -107,13 +107,41 @@ function Board:calculateMatches()
 end
 
 function Board:removeMatches()
+
+    local rewards = {score=0,time=0}
+
     for i,match in pairs(self.matches) do
+        
+        local vertical_match = (match[1].gridX == match[2].gridX) and true or false
+    
         for j,tile in pairs(match) do
-            self.tiles[tile.gridY][tile.gridX] = nil
+            if(tile.isSpecial) then
+                if vertical_match then
+                    for y=1,GRID_ROWS do
+                        if self.tiles[y][tile.gridX] ~= nil then
+                            rewards.score = rewards.score + self.tiles[y][tile.gridX].shape * 10
+                            rewards.time = rewards.time + 1
+                            self.tiles[y][tile.gridX] = nil
+                        end
+                    end
+                else
+                    for x=1,GRID_COLUMNS do
+                        if self.tiles[tile.gridY][x] ~= nil then
+                            rewards.score = rewards.score + self.tiles[tile.gridY][x].shape * 10
+                            rewards.time = rewards.time + 1
+                            self.tiles[tile.gridY][x] = nil
+                        end
+                    end
+                end
+            else
+                rewards.score = rewards.score + tile.shape * 10
+                rewards.time = rewards.time + 1
+                self.tiles[tile.gridY][tile.gridX] = nil
+            end
         end
     end
-
     self.matches = nil
+    return rewards
 end
 
 function Board:getNewTiles()
@@ -177,6 +205,14 @@ function Board:getNewTiles()
     end
 
     return tweens
+end
+
+function Board:update(dt)
+    for y,row in pairs(self.tiles) do
+        for x,tile in pairs(row) do
+            tile:update(dt)
+        end
+    end
 end
 
 function Board:render()
