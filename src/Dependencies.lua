@@ -16,6 +16,7 @@ require 'src/states/BaseState'
 require 'src/states/StartState'
 require 'src/states/BeginGameState'
 require 'src/states/PlayState'
+require 'src/states/GameOverState'
 
 
 gSounds = {
@@ -49,6 +50,7 @@ gStateMachine = StateMachine{
     ['StartState'] = function() return StartState() end,
     ['BeginGameState'] = function() return BeginGameState() end,
     ['PlayState'] = function() return PlayState() end,
+    ['GameOverState'] = function() return GameOverState() end,
 }
 
 

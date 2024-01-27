@@ -61,7 +61,8 @@ function StartState:update(dt)
             }):finish(function()
                 gStateMachine:change('BeginGameState',{
                     level = 1,
-                    targetScore = 300
+                    targetScore = 300,
+                    score = 0,
                 })
                 self.colorTimer:remove()
             end)

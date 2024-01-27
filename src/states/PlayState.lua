@@ -3,8 +3,7 @@ PlayState = Class{__includes = BaseState}
 
 function PlayState:init()
     self.panel = {
-        score = 0,
-        timeleft = 60,
+        timeleft = 2,
         box = {
             x = 20,
             y = 20,
@@ -25,6 +24,7 @@ end
 
 function PlayState:enter(enterParas)
     self.panel.level = enterParas.level
+    self.panel.score = enterParas.score
     self.panel.targetScore = enterParas.targetScore
 
     self.board = enterParas.board
@@ -36,12 +36,15 @@ function PlayState:update(dt)
 
     if self.panel.timeleft <=0 then
         Timer.clear()
-        gStateMachine:change('StartState')
+        gStateMachine:change('GameOverState',{
+            score = self.panel.score
+        })
     elseif self.panel.score >= self.panel.targetScore then
         Timer.clear()
         gStateMachine:change('BeginGameState',{
             level = self.panel.level + 1,
-            targetScore = self.panel.targetScore + 100
+            targetScore = self.panel.targetScore + 500,
+            score = self.panel.score,
         })
     end
 
